@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://timhudsonacs.github.io/whoopdy-doo-site/sitemap.xml
