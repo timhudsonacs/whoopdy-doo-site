@@ -48,7 +48,7 @@ for url, page in pages.items():
     assert len(page.find('meta', name='description')) == 1, url
     assert page.find('a', href=APP) and page.find('a', href=STUDIO), url
     for tag,attrs in page.tags:
-        for attr in ('href','src'):
+        for attr in ('href','src','poster'):
             value = attrs.get(attr)
             if not value: continue
             absolute = urljoin(url,value)
@@ -63,6 +63,9 @@ for url, page in pages.items():
     assert not page.find('script', src=''), 'No executable JavaScript is needed'
     assert all(a.get('type') == 'application/ld+json' for a in page.find('script'))
 game = pages[BASE].schemas[0]
+assert game['name'] == 'MUNTED: MTB' and game['alternateName'] == 'Whoopdy Doo'
+assert pages[BASE].find('meta', name='google-site-verification')
+assert pages[BASE].find('meta', name='apple-itunes-app')[0]['content'].startswith('app-id=6826962497,')
 assert game['downloadUrl'] == APP and game['offers']['price'] == '0'
 assert game['operatingSystem'] == 'iOS 17.0 or later'
 assert game['creator']['@id'] == STUDIO+'#organization'
@@ -71,7 +74,10 @@ assert pages[BASE].find('a', href='best-mountain-bike-game/')
 guide = pages[BASE+'best-mountain-bike-game/']
 assert guide.schemas[0]['@graph'][0]['publisher']['@id'] == STUDIO+'#organization'
 assert len(guide.find('table')) == 1
-for app_id in ('6826962497','1671517038','1604675493','6444827073'):
+for url, campaign in ((BASE, 'mtb_game_site'), (BASE+'best-mountain-bike-game/', 'mtb_guide')):
+    app_link = f'https://apps.apple.com/app/apple-store/id6826962497?pt=127545438&ct={campaign}&mt=8'
+    assert pages[url].find('a', href=app_link), (url, 'primary download missing')
+for app_id in ('6826962497','1671517038','1604675493','6444827073','6752247382'):
     assert any('apps.apple.com/' in a.get('href','') and app_id in a['href'] for a in guide.find('a'))
 assert 'Coming to the App Store' not in (ROOT/'index.html').read_text()
 assert f'Sitemap: {BASE}sitemap.xml' in (ROOT/'robots.txt').read_text()
