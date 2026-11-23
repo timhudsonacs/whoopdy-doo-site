@@ -46,7 +46,9 @@ for url, page in pages.items():
     assert len(page.ids) == len(set(page.ids)), url
     assert page.find('link', rel='canonical') == [{'rel':'canonical','href':url}], url
     assert len(page.find('meta', name='description')) == 1, url
-    assert page.find('a', href=APP) and page.find('a', href=STUDIO), url
+    assert page.find('a', href=STUDIO), url
+    if url != BASE + 'best-mountain-bike-game/':
+        assert page.find('a', href=APP), url
     for tag,attrs in page.tags:
         for attr in ('href','src','poster'):
             value = attrs.get(attr)
@@ -74,6 +76,8 @@ assert pages[BASE].find('a', href='best-mountain-bike-game/')
 guide = pages[BASE+'best-mountain-bike-game/']
 assert guide.schemas[0]['@graph'][0]['publisher']['@id'] == STUDIO+'#organization'
 assert len(guide.find('table')) == 1
+assert 'controls' in guide.find('video', preload='none')[0]
+assert guide.find('source', src='../assets/fern-and-fable-iphone.mp4', type='video/mp4')
 for url, campaign in ((BASE, 'mtb_game_site'), (BASE+'best-mountain-bike-game/', 'mtb_guide')):
     app_link = f'https://apps.apple.com/app/apple-store/id6826962497?pt=127545438&ct={campaign}&mt=8'
     assert pages[url].find('a', href=app_link), (url, 'primary download missing')
