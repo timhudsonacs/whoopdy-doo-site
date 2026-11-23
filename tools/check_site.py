@@ -81,7 +81,7 @@ assert guide.find('source', src='../assets/fern-and-fable-iphone.mp4', type='vid
 for url, campaign in ((BASE, 'mtb_game_site'), (BASE+'best-mountain-bike-game/', 'mtb_guide')):
     app_link = f'https://apps.apple.com/app/apple-store/id6826962497?pt=127545438&ct={campaign}&mt=8'
     assert pages[url].find('a', href=app_link), (url, 'primary download missing')
-for app_id in ('6826962497','1671517038','1604675493','6444827073','6752247382'):
+for app_id in ('6826962497','1671517038','1604675493','6444827073','6752247382','6822113163'):
     assert any('apps.apple.com/' in a.get('href','') and app_id in a['href'] for a in guide.find('a'))
 assert 'Coming to the App Store' not in (ROOT/'index.html').read_text()
 assert f'Sitemap: {BASE}sitemap.xml' in (ROOT/'robots.txt').read_text()
