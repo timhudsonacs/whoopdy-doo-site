@@ -66,6 +66,9 @@ for url, page in pages.items():
     assert all(a.get('type') == 'application/ld+json' for a in page.find('script'))
 game = pages[BASE].schemas[0]
 assert game['name'] == 'MUNTY: MTB' and game['alternateName'] == 'Whoopdy Doo'
+assert game['image'] == BASE + 'assets/munty-mtb-logo.webp'
+assert pages[BASE].find('img', src='assets/munty-mtb-logo.webp')
+assert path_for(game['image']).read_bytes() == (ROOT / 'assets/munted-mtb-logo.webp').read_bytes()
 assert pages[BASE].find('meta', name='google-site-verification')
 assert pages[BASE].find('meta', name='apple-itunes-app')[0]['content'].startswith('app-id=6826962497,')
 assert game['downloadUrl'] == APP and game['offers']['price'] == '0'
